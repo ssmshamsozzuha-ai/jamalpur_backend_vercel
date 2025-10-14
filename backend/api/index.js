@@ -428,15 +428,24 @@ app.get('/', (req, res) => {
   res.json({
     message: 'Jamalpur Chamber of Commerce & Industry - Backend API',
     status: 'running',
-    version: '1.0.0',
+    version: '2.0.0',
+    timestamp: new Date().toISOString(),
+    environment: process.env.VERCEL ? 'Vercel' : 'Local',
     endpoints: {
       api: '/api',
       health: '/api/health',
+      debug: '/api/debug',
+      test: '/api/test',
       auth: '/api/auth',
       notices: '/api/notices',
       gallery: '/api/gallery',
       news: '/api/news',
       forms: '/api/forms'
+    },
+    environment_check: {
+      mongodb_uri: process.env.MONGODB_URI ? 'SET' : 'NOT SET',
+      jwt_secret: process.env.JWT_SECRET ? 'SET' : 'NOT SET',
+      brevo_api_key: process.env.BREVO_API_KEY ? 'SET' : 'NOT SET'
     },
     documentation: 'See README.md for API documentation'
   });
