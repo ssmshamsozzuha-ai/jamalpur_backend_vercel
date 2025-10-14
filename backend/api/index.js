@@ -451,6 +451,7 @@ app.get('/favicon.ico', (req, res) => {
 app.get('/api/debug', (req, res) => {
   res.json({
     timestamp: new Date().toISOString(),
+    version: '2.0.0-debug',
     environment: process.env.VERCEL ? 'Vercel' : 'Local',
     node_env: process.env.NODE_ENV,
     mongodb_uri: process.env.MONGODB_URI ? 'SET' : 'NOT SET',
@@ -458,6 +459,15 @@ app.get('/api/debug', (req, res) => {
     brevo_api_key: process.env.BREVO_API_KEY ? 'SET' : 'NOT SET',
     mongoose_connection_state: mongoose.connection.readyState,
     mongoose_connection_host: mongoose.connection.host || 'not connected'
+  });
+});
+
+// Simple test endpoint to verify deployment
+app.get('/api/test', (req, res) => {
+  res.json({
+    message: 'New deployment test - version 2.0.0',
+    timestamp: new Date().toISOString(),
+    deployed: true
   });
 });
 
