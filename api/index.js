@@ -258,6 +258,42 @@ app.get('/api/notices', async (req, res) => {
   }
 });
 
+// Create Notice (Admin only)
+app.post('/api/notices', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { title, content, priority } = req.body;
+
+    // Validation
+    if (!title || !content) {
+      return res.status(400).json({ message: 'Title and content are required' });
+    }
+
+    const notice = new Notice({
+      title: title.trim(),
+      content: content.trim(),
+      priority: priority || 'normal',
+      author: req.user.name || 'Admin'
+    });
+
+    await notice.save();
+
+    res.status(201).json({
+      message: 'Notice created successfully',
+      notice: {
+        id: notice._id,
+        title: notice.title,
+        content: notice.content,
+        priority: notice.priority,
+        author: notice.author,
+        createdAt: notice.createdAt
+      }
+    });
+  } catch (error) {
+    console.error('Create notice error:', error);
+    res.status(500).json({ message: 'Server error creating notice' });
+  }
+});
+
 // Get gallery
 app.get('/api/gallery', async (req, res) => {
   try {
@@ -288,6 +324,54 @@ app.get('/api/news', async (req, res) => {
   } catch (error) {
     console.error('Get news error:', error);
     res.status(500).json({ message: 'Server error fetching news' });
+  }
+});
+
+// Create news article (Admin only)
+app.post('/api/news', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { title, content, category, imageUrl, isFeatured } = req.body;
+    
+    // Validation
+    if (!title || !content) {
+      return res.status(400).json({ message: 'Title and content are required' });
+    }
+    
+    if (title.trim().length < 3) {
+      return res.status(400).json({ message: 'Title must be at least 3 characters long' });
+    }
+    
+    if (content.trim().length < 10) {
+      return res.status(400).json({ message: 'Content must be at least 10 characters long' });
+    }
+
+    const news = new News({
+      title: title.trim(),
+      content: content.trim(),
+      category: category || 'business',
+      author: req.user.name || 'Admin',
+      imageUrl: imageUrl || '',
+      isFeatured: isFeatured || false
+    });
+
+    await news.save();
+    
+    res.status(201).json({
+      message: 'News article created successfully',
+      news: {
+        id: news._id,
+        title: news.title,
+        content: news.content,
+        category: news.category,
+        author: news.author,
+        imageUrl: news.imageUrl,
+        isFeatured: news.isFeatured,
+        publishedAt: news.publishedAt
+      }
+    });
+  } catch (error) {
+    console.error('Create news error:', error);
+    res.status(500).json({ message: 'Server error creating news' });
   }
 });
 
