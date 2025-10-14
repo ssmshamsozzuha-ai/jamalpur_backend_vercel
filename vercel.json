@@ -3,7 +3,10 @@
   "builds": [
     {
       "src": "server/index.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "maxDuration": 30
+      }
     }
   ],
   "routes": [
@@ -20,10 +23,5 @@
     "NODE_ENV": "production",
     "CLIENT_URL": "https://jamalpur-frontend3.vercel.app",
     "FRONTEND_URL": "https://jamalpur-frontend3.vercel.app"
-  },
-  "functions": {
-    "server/index.js": {
-      "maxDuration": 30
-    }
   }
 }
