@@ -379,5 +379,29 @@ const initializeDefaultAdmin = async () => {
 // Initialize admin on startup
 initializeDefaultAdmin();
 
+// Default route to prevent 404 errors
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Jamalpur Chamber of Commerce & Industry - Backend API',
+    status: 'running',
+    version: '1.0.0',
+    endpoints: {
+      api: '/api',
+      health: '/api/health',
+      auth: '/api/auth',
+      notices: '/api/notices',
+      gallery: '/api/gallery',
+      news: '/api/news',
+      forms: '/api/forms'
+    },
+    documentation: 'See README.md for API documentation'
+  });
+});
+
+// Handle favicon requests to prevent 404 errors
+app.get('/favicon.ico', (req, res) => {
+  res.status(204).end(); // No content response
+});
+
 // Export the app for Vercel
 module.exports = app;

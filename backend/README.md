@@ -14,7 +14,7 @@ Create `.env` file:
 
 ```env
 BREVO_API_KEY=your-brevo-api-key
-MONGODB_URI=mongodb://localhost:27017/jamalpur-chamber
+MONGODB_URI=mongodb+srv://jamalpur:4hwq02K1y0cc811Y@jamalpur-cluster.pmjnmjc.mongodb.net/Jamalpur-chamber?retryWrites=true&w=majority&appName=jamalpur-cluster
 JWT_SECRET=your-secret-key-change-in-production
 PORT=5000
 CLIENT_URL=http://localhost:3000
