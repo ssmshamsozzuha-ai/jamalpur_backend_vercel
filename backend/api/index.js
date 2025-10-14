@@ -447,5 +447,19 @@ app.get('/favicon.ico', (req, res) => {
   res.status(204).end(); // No content response
 });
 
+// Debug endpoint to check environment variables
+app.get('/api/debug', (req, res) => {
+  res.json({
+    timestamp: new Date().toISOString(),
+    environment: process.env.VERCEL ? 'Vercel' : 'Local',
+    node_env: process.env.NODE_ENV,
+    mongodb_uri: process.env.MONGODB_URI ? 'SET' : 'NOT SET',
+    jwt_secret: process.env.JWT_SECRET ? 'SET' : 'NOT SET',
+    brevo_api_key: process.env.BREVO_API_KEY ? 'SET' : 'NOT SET',
+    mongoose_connection_state: mongoose.connection.readyState,
+    mongoose_connection_host: mongoose.connection.host || 'not connected'
+  });
+});
+
 // Export the app for Vercel
 module.exports = app;
