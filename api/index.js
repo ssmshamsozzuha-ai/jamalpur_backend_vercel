@@ -242,20 +242,13 @@ app.post('/api/forms/submit', async (req, res) => {
   }
 });
 
-// Get notices
+// Get notices - TEMPORARILY DISABLED DUE TO MONGODB CONNECTION ISSUES
 app.get('/api/notices', async (req, res) => {
-  try {
-    const notices = await Notice.find({ isActive: true })
-      .sort({ createdAt: -1 })
-      .lean()
-      .select('-__v');
-    
-    res.set('Cache-Control', 'public, max-age=300');
-    res.json(notices);
-  } catch (error) {
-    console.error('Get notices error:', error);
-    res.status(500).json({ message: 'Server error fetching notices' });
-  }
+  console.log('🚫 Notices API temporarily disabled - MongoDB connection issues');
+  res.status(503).json({ 
+    message: 'Notices temporarily unavailable - MongoDB connection issues',
+    error: 'Service temporarily unavailable'
+  });
 });
 
 // Create Notice (Admin only)
@@ -294,37 +287,22 @@ app.post('/api/notices', authenticateToken, requireAdmin, async (req, res) => {
   }
 });
 
-// Get gallery
+// Get gallery - TEMPORARILY DISABLED DUE TO MONGODB CONNECTION ISSUES
 app.get('/api/gallery', async (req, res) => {
-  try {
-    const images = await GalleryImage.find({ isActive: true })
-      .sort({ order: 1, uploadedAt: -1 })
-      .lean()
-      .select('-__v');
-    
-    res.set('Cache-Control', 'public, max-age=600');
-    res.json(images);
-  } catch (error) {
-    console.error('Get Gallery Error:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+  console.log('🚫 Gallery API temporarily disabled - MongoDB connection issues');
+  res.status(503).json({ 
+    message: 'Gallery temporarily unavailable - MongoDB connection issues',
+    error: 'Service temporarily unavailable'
+  });
 });
 
-// Get news
+// Get news - TEMPORARILY DISABLED DUE TO MONGODB CONNECTION ISSUES
 app.get('/api/news', async (req, res) => {
-  try {
-    const news = await News.find({ isActive: true })
-      .sort({ publishedAt: -1, createdAt: -1 })
-      .limit(10)
-      .lean()
-      .select('-__v');
-    
-    res.set('Cache-Control', 'public, max-age=300');
-    res.json(news);
-  } catch (error) {
-    console.error('Get news error:', error);
-    res.status(500).json({ message: 'Server error fetching news' });
-  }
+  console.log('🚫 News API temporarily disabled - MongoDB connection issues');
+  res.status(503).json({ 
+    message: 'News temporarily unavailable - MongoDB connection issues',
+    error: 'Service temporarily unavailable'
+  });
 });
 
 // Create news article (Admin only)
