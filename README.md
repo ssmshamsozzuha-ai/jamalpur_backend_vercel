@@ -1,104 +1,79 @@
-# Jamalpur Chamber of Commerce & Industry
+# Backend API - Jamalpur Chamber
 
-Modern web application for chamber management with authentication, notices, gallery, and form submissions.
+Express.js REST API with MongoDB
 
-## 📂 Project Structure
-
-```
-jamalpurCommerce_2/
-├── backend/              # Express.js API
-│   ├── server/
-│   ├── package.json
-│   └── .env
-├── frontend/             # React application
-│   ├── src/
-│   ├── public/
-│   └── package.json
-└── README.md
-```
-
-## 🚀 Quick Start
-
-### 1. Install Dependencies
+## 🚀 Setup
 
 ```bash
-# Install backend dependencies
-cd backend
-npm install
-
-# Install frontend dependencies
-cd ../frontend
 npm install
 ```
 
-### 2. Configure Environment
+## ⚙️ Configuration
 
-Edit `backend/.env`:
+Create `.env` file:
+
 ```env
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-gmail-app-password
+BREVO_API_KEY=your-brevo-api-key
 MONGODB_URI=mongodb://localhost:27017/jamalpur-chamber
-JWT_SECRET=your-secret-key
+JWT_SECRET=your-secret-key-change-in-production
 PORT=5000
 CLIENT_URL=http://localhost:3000
 ```
 
-### 3. Run the Application
+## 📦 Run
 
-**Option A: Start separately**
 ```bash
-# Terminal 1 - Backend
-cd backend
+# Development
 npm start
 
-# Terminal 2 - Frontend
-cd frontend
-npm start
+# Production
+NODE_ENV=production npm start
 ```
 
-**Option B: Use the startup script (Windows)**
-```bash
-start-project.bat
-```
+## 🌐 API Endpoints
 
-## 🌐 Access
+### Authentication
+- `POST /api/auth/register` - Register user
+- `POST /api/auth/login` - Login
+- `POST /api/auth/forgot-password` - Request OTP
+- `POST /api/auth/verify-otp` - Verify OTP
+- `POST /api/auth/reset-password` - Reset password
 
-- **Frontend:** http://localhost:3000
-- **Backend API:** http://localhost:5000/api
+### Notices (Admin)
+- `GET /api/notices` - Get all notices
+- `POST /api/notices` - Create notice
+- `PUT /api/notices/:id` - Update notice
+- `DELETE /api/notices/:id` - Delete notice
 
-## 🔑 Default Admin
+### Gallery (Admin)
+- `GET /api/gallery` - Get all images
+- `POST /api/gallery/upload` - Upload image
+- `DELETE /api/gallery/:id` - Delete image
+
+### Forms
+- `POST /api/forms/submit-with-file` - Submit form with PDF
+- `GET /api/forms/submissions` - Get submissions (Admin)
+
+### News (Admin)
+- `GET /api/news` - Get all news
+- `POST /api/news` - Create news
+- `PUT /api/news/:id` - Update news
+- `DELETE /api/news/:id` - Delete news
+
+## 🔒 Default Admin
 
 ```
 Email: admin@admin.com
 Password: admin123
 ```
 
-## 📚 Documentation
+## 📊 Dependencies
 
-- [Backend README](backend/README.md) - API documentation
-- [Frontend README](frontend/README.md) - Frontend setup
-
-## 🚀 Deployment
-
-### Backend (Render/Railway/Heroku)
-```bash
-cd backend
-npm install
-npm start
-```
-
-### Frontend (Vercel/Netlify)
-```bash
-cd frontend
-npm install
-npm run build
-```
-
-## 🔧 Tech Stack
-
-**Backend:** Express, MongoDB, JWT, Nodemailer, Multer  
-**Frontend:** React, React Router, Axios, Framer Motion
-
-## 📝 License
-
-MIT License
+- express - Web framework
+- mongoose - MongoDB ODM
+- bcryptjs - Password hashing
+- jsonwebtoken - JWT authentication
+- multer - File uploads
+- cors - CORS middleware
+- dotenv - Environment variables
+- compression - Response compression

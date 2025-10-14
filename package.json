@@ -1,0 +1,36 @@
+{
+  "name": "jamalpur-chamber-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Jamalpur Chamber of Commerce & Industry",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
+    "start:prod": "NODE_ENV=production node server/index.js",
+    "build": "echo 'No build step required for Node.js backend'",
+    "vercel-build": "echo 'Vercel build completed'",
+    "test": "echo \"No tests specified\" && exit 0",
+    "lint": "echo \"No linter configured\" && exit 0"
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
+    "@sendinblue/client": "^3.3.1",
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "gridfs-stream": "^1.1.1",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.3",
+    "multer": "^1.4.4",
+    "multer-gridfs-storage": "^5.0.2",
+    "nodemailer": "^6.10.1",
+    "sharp": "^0.34.4",
+    "socket.io": "^4.8.1",
+    "twilio": "^4.23.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}

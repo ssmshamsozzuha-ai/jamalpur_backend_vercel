@@ -1,22 +1,34 @@
-# Root level gitignore
-
-# Subdirectory node_modules
+# Dependencies
+node_modules/
 backend/node_modules/
 frontend/node_modules/
-node_modules/
 
-# Environment files
+# Environment variables
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 backend/.env
 frontend/.env
 
 # Build outputs
 frontend/build/
 
+# Uploads (don't commit user uploads)
+server/uploads/*.pdf
+server/uploads/*.jpg
+server/uploads/*.jpeg
+server/uploads/*.png
+server/uploads/*.gif
+
 # Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 
@@ -25,6 +37,7 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+*~
 
 # Misc
 .cache/

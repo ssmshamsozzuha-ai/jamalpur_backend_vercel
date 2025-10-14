@@ -2,30 +2,26 @@
   "version": 2,
   "builds": [
     {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
+      "src": "api/index.js",
+      "use": "@vercel/node",
       "config": {
-        "distDir": "build"
+        "maxDuration": 30
       }
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "https://your-backend-url.onrender.com/api/$1"
+      "dest": "/api/index.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/frontend/$1"
+      "dest": "/api/index.js"
     }
   ],
   "env": {
-    "REACT_APP_API_URL": "https://your-backend-url.onrender.com/api",
-    "REACT_APP_SOCKET_URL": "https://your-backend-url.onrender.com"
-  },
-  "functions": {
-    "frontend/build/static/js/*.js": {
-      "maxDuration": 30
-    }
+    "NODE_ENV": "production",
+    "CLIENT_URL": "https://jamalpur-frontend3.vercel.app",
+    "FRONTEND_URL": "https://jamalpur-frontend3.vercel.app"
   }
 }
