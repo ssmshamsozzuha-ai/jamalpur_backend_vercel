@@ -5,75 +5,19 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-const compression = require('compression');
-const { createServer } = require('http');
-const { Server } = require('socket.io');
 
 // Load environment variables
 dotenv.config();
 
-// Import email service after environment variables are loaded
-const emailService = require('../server/emailService');
-
-// Import image optimizer
-const { optimizeUploadedImage } = require('../server/middleware/imageOptimizer');
-
 const app = express();
 
-// For Vercel, we need to handle the serverless environment
-const isVercel = process.env.VERCEL === '1';
-
 // Middleware
-app.use(compression({ level: 6, threshold: 1024 }));
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Create uploads directory if it doesn't exist (only in non-Vercel environments)
-if (!isVercel) {
-  const uploadsDir = path.join(__dirname, '../server/uploads');
-  if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-  }
-  
-  // Serve static files from uploads directory
-  app.use('/api/files', express.static(uploadsDir, {
-    maxAge: '1d',
-    etag: true,
-    lastModified: true
-  }));
-}
-
-// MongoDB Connection with Performance Optimizations
+// MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/jamalpur-chamber';
-
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if (isVercel) {
-      // In Vercel, we'll use memory storage or cloud storage
-      cb(null, '/tmp');
-    } else {
-      cb(null, path.join(__dirname, '../server/uploads'));
-    }
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
-    cb(null, `${file.fieldname}-${uniqueSuffix}${path.extname(file.originalname)}`);
-  }
-});
-
-const upload = multer({
-  storage,
-  fileFilter: (req, file, cb) => {
-    const allowed = file.mimetype === 'application/pdf' || file.mimetype.startsWith('image/');
-    cb(allowed ? null : new Error('Only PDF and image files allowed'), allowed);
-  },
-  limits: { fileSize: 10 * 1024 * 1024 }
-});
 
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI, {
@@ -84,9 +28,11 @@ mongoose.connect(MONGODB_URI, {
 .then(() => {
   console.log('✅ MongoDB Connected Successfully');
 })
-.catch(err => console.error('❌ MongoDB Connection Error:', err));
+.catch(err => {
+  console.error('❌ MongoDB Connection Error:', err);
+});
 
-// MongoDB Schemas (same as original)
+// MongoDB Schemas
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -108,12 +54,6 @@ const formSubmissionSchema = new mongoose.Schema({
   message: { type: String, required: true },
   category: { type: String, default: 'general' },
   address: { type: String, default: '' },
-  pdfFile: {
-    filename: { type: String },
-    originalName: { type: String },
-    path: { type: String },
-    size: { type: Number }
-  },
   submittedAt: { type: Date, default: Date.now }
 });
 
@@ -125,12 +65,6 @@ const noticeSchema = new mongoose.Schema({
   content: { type: String, required: true },
   author: { type: String, required: true },
   priority: { type: String, enum: ['high', 'normal', 'low'], default: 'normal' },
-  pdfFile: {
-    filename: { type: String },
-    originalName: { type: String },
-    mimetype: { type: String },
-    size: { type: Number }
-  },
   createdAt: { type: Date, default: Date.now },
   isActive: { type: Boolean, default: true }
 });
@@ -203,19 +137,16 @@ const requireAdmin = (req, res, next) => {
   next();
 };
 
-// API Routes (same as original, but adapted for serverless)
+// API Routes
 
 app.get('/api/health', (req, res) => {
   res.json({ 
     message: 'THE JAMALPUR CHAMBER OF COMMERCE AND INDUSTRY API is running!', 
     status: 'OK',
     timestamp: new Date().toISOString(),
-    environment: isVercel ? 'Vercel' : 'Local'
+    environment: process.env.VERCEL ? 'Vercel' : 'Local'
   });
 });
-
-// Include all your existing API routes here...
-// For brevity, I'll include a few key routes as examples
 
 app.post('/api/auth/register', async (req, res) => {
   try {
